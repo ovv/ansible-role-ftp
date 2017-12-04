@@ -1,0 +1,36 @@
+---
+
+- name: Users
+  no_log: true
+  user:
+    name: "{{ item.key }}"
+    state: present
+    password: "{{ item.value.password|password_hash('sha512') }}"
+    update_password: on_create
+    home: "{{ item.value.home | default(omit) }}"
+    createhome: yes
+  with_dict: "{{ ftp_users }}"
+
+- name: Install
+  apt:
+    pkg: proftpd-basic
+    state: latest
+
+- name: Configure
+  template:
+    src: etc/proftpd/proftpd.conf
+    dest: /etc/proftpd/proftpd.conf
+  notify: Restart Proftpd
+
+- name: Configure users
+  no_log: true
+  template:
+    src: etc/proftpd/conf.d/user.conf
+    dest: "/etc/proftpd/conf.d/{{ item.key }}.conf"
+  with_dict: "{{ ftp_users }}"
+
+- name: Enable
+  service:
+    name: proftpd
+    state: started
+    enabled: true

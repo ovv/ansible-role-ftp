@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  roles:
+    - ansible-role-ftp
+  vars:
+    ftp_port: 2121
+    ftp_passive_ports: 49000 50000
+    ftp_masquerade_address: example.com
+    ftp_users:
+      example:
+        password: password
