@@ -22,13 +22,6 @@
     dest: /etc/proftpd/proftpd.conf
   notify: Restart Proftpd
 
-- name: Configure users
-  no_log: true
-  template:
-    src: etc/proftpd/conf.d/user.conf
-    dest: "/etc/proftpd/conf.d/{{ item.key }}.conf"
-  with_dict: "{{ ftp_users }}"
-
 - name: Enable
   service:
     name: proftpd
