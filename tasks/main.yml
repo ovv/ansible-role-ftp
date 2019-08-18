@@ -14,7 +14,7 @@
 - name: Install
   apt:
     pkg: proftpd-basic
-    state: latest
+    state: present
 
 - name: Configure
   template:
